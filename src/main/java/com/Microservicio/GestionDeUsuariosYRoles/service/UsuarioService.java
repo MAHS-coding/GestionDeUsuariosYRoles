@@ -1,18 +1,22 @@
 package com.Microservicio.GestionDeUsuariosYRoles.service;
 
-import org.springframework.http.ResponseEntity;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.Microservicio.GestionDeUsuariosYRoles.model.Usuario;
+import com.Microservicio.GestionDeUsuariosYRoles.repository.UsuarioRepository;
 
 @Service
 public class UsuarioService {
     
     @Autowired
-    pritave UsuarioRepository usuarioRepository;
+    private UsuarioRepository usuarioRepository;
 
-    public ResponseEntity<Usuario> leerUsuarios()
+    // Mostrar a todos los usuarios
+    public List<Usuario> listarUsuarios()
     {
-        return new ResponseEntity<>(usuarioRepository.findAll(), HttpStatus.OK);
+        return usuarioRepository.findAll();
     }
 }
