@@ -19,4 +19,11 @@ public class UsuarioService {
     {
         return usuarioRepository.findAll();
     }
+
+    // Crear un nuevo usuario
+    public Usuario crearUsuario(Usuario usuario)
+    {
+        return usuarioRepository.save(usuario);
+    }
+
 }

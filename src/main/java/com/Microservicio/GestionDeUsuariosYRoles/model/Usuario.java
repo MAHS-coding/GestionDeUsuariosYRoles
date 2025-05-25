@@ -33,4 +33,5 @@ public class Usuario {
     private String emailInstitucional;
 
     private boolean activo = true;
+
 }

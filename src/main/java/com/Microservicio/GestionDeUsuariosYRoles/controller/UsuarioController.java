@@ -24,4 +24,7 @@ public class UsuarioController {
     {
         return new ResponseEntity<>(usuarioService.listarUsuarios(), HttpStatus.OK);
     }
+
+    @PostMapping 
+    public ResponseEntity<Usuario> crearUsuario()
 }
