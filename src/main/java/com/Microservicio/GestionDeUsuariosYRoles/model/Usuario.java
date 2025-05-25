@@ -2,6 +2,7 @@ package com.Microservicio.GestionDeUsuariosYRoles.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,6 +21,10 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idUsuario;
 
+    @Enumerated
+    @Column(nullable = false)
+    private TipoUsuario tipoUsuario;
+
     @Column(length = 150, nullable = false)
     private String nombreUsuario;
 
@@ -32,6 +37,18 @@ public class Usuario {
     @Column(length = 150, nullable = false)
     private String emailInstitucional;
 
+    @Column(nullable = false)
     private boolean activo = true;
 
+    // Email automatico
+    public void generarEmailInstitucional() {
+        String nombreFormateado = this.nombreUsuario.toLowerCase().replace(" ", "");
+        String apellidoFormateado = this.apellidoPUsuario.toLowerCase().replace(" ", "");
+        String dominio = switch(this.tipoUsuario) {
+            case ADMINISTRADOR -> "@admin.duocuc.cl";
+            case PROFESOR -> "@profesor.duocuc.cl";
+            case ESTUDIANTE -> "@duocuc.cl";
+        };
+        this.emailInstitucional = nombreFormateado + apellidoFormateado + dominio;
+    }
 }
