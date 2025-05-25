@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.Microservicio.GestionDeUsuariosYRoles.model.Rol;
 import com.Microservicio.GestionDeUsuariosYRoles.model.TipoUsuario;
 import com.Microservicio.GestionDeUsuariosYRoles.model.Usuario;
+import com.Microservicio.GestionDeUsuariosYRoles.repository.RolRepository;
 import com.Microservicio.GestionDeUsuariosYRoles.repository.UsuarioRepository;
 
 @Service
@@ -14,6 +16,9 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private RolRepository rolRepository;
 
     // Mostrar a todos los usuarios
     public List<Usuario> listarUsuarios() {
@@ -91,6 +96,17 @@ public class UsuarioService {
             throw new RuntimeException("Usuario con ID" + idUsuario + " no encontrado");
         }
         usuarioRepository.deleteById(idUsuario);
+    }
+
+    // Asignar rol a usuario
+    public Usuario asignarRolAUsuario(Integer idUsuario, Long idRol) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Rol rol = rolRepository.findById(idRol)
+                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+
+        usuario.setRol(rol);
+        return usuarioRepository.save(usuario);
     }
 
 }

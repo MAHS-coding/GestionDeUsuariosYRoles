@@ -1,6 +1,7 @@
 package com.Microservicio.GestionDeUsuariosYRoles.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -75,6 +76,16 @@ public class UsuarioController {
     @PutMapping("/{idUsuario}/estado")
     public ResponseEntity<Usuario> cambiarEstadoUsuario(@PathVariable int idUsuario) {
         return ResponseEntity.ok(usuarioService.cambiarEstadoUsuario(idUsuario));
+    }
+
+    @PutMapping("/asignar_rol")
+    public ResponseEntity<Usuario> asignarRol(
+            @RequestBody Map<String, Long> request) {
+
+        return ResponseEntity.ok(
+                usuarioService.asignarRolAUsuario(
+                        request.get("idUsuario").intValue(),
+                        request.get("idRol")));
     }
 
     @DeleteMapping("/{idUsuario}")
