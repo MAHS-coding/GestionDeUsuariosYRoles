@@ -1,5 +1,7 @@
 package com.Microservicio.GestionDeUsuariosYRoles.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
@@ -37,8 +39,14 @@ public class Usuario {
     @Column(length = 150, nullable = false)
     private String emailInstitucional;
 
+    @JsonIgnore
     @Column(nullable = false)
     private boolean activo = true;
+
+    public String getEstado()
+    {
+        return activo ? "ACTIVO" : "INACTIVO";
+    }
 
     // Email automatico
     public void generarEmailInstitucional() {

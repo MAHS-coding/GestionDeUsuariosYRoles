@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.Microservicio.GestionDeUsuariosYRoles.dto.UsuarioCreacionDTO;
 import com.Microservicio.GestionDeUsuariosYRoles.model.Usuario;
 import com.Microservicio.GestionDeUsuariosYRoles.service.UsuarioService;
 
@@ -36,16 +35,46 @@ public class UsuarioController {
         return new ResponseEntity<>(usuario, HttpStatus.OK);
     }
 
+    @GetMapping("/profesores")
+    public ResponseEntity<List<Usuario>> getProfesores() {
+        return ResponseEntity.ok(usuarioService.listarProfesores());
+    }
+
+    @GetMapping("/administradores")
+    public ResponseEntity<List<Usuario>> getAdministradores() {
+        return ResponseEntity.ok(usuarioService.listarAdministradores());
+    }
+
+    @GetMapping("/estudiantes")
+    public ResponseEntity<List<Usuario>> getEstudiantes() {
+        return ResponseEntity.ok(usuarioService.listarEstudiantes());
+    }
+
+    @GetMapping("/activos")
+    public ResponseEntity<List<Usuario>> getUsuariosActivos() {
+        return ResponseEntity.ok(usuarioService.listarUsuariosActivos());
+    }
+
+    @GetMapping("/inactivos")
+    public ResponseEntity<List<Usuario>> getUsuariosInactivos() {
+        return ResponseEntity.ok(usuarioService.listarUsuariosInactivos());
+    }
+
     @PostMapping
-    public ResponseEntity<Usuario> postUsuario(@RequestBody UsuarioCreacionDTO usuarioDTO) {
-        return new ResponseEntity<>(usuarioService.crearUsuario(usuarioDTO), HttpStatus.OK);
+    public ResponseEntity<Usuario> postUsuario(@RequestBody Usuario usuario) {
+        return new ResponseEntity<>(usuarioService.crearUsuario(usuario), HttpStatus.OK);
     }
 
     @PutMapping("/{idUsuario}")
     public ResponseEntity<Usuario> actualizarUsuario(
             @PathVariable int idUsuario,
             @RequestBody Usuario usuario) {
-        return new ResponseEntity<>(usuarioService.actualizarUsuario(idUsuario, usuario), HttpStatus.OK);
+        return ResponseEntity.ok(usuarioService.actualizarUsuario(idUsuario, usuario));
+    }
+
+    @PutMapping("/{idUsuario}/estado")
+    public ResponseEntity<Usuario> cambiarEstadoUsuario(@PathVariable int idUsuario) {
+        return ResponseEntity.ok(usuarioService.cambiarEstadoUsuario(idUsuario));
     }
 
     @DeleteMapping("/{idUsuario}")

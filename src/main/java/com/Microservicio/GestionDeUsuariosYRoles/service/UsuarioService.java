@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.Microservicio.GestionDeUsuariosYRoles.dto.UsuarioCreacionDTO;
+import com.Microservicio.GestionDeUsuariosYRoles.model.TipoUsuario;
 import com.Microservicio.GestionDeUsuariosYRoles.model.Usuario;
 import com.Microservicio.GestionDeUsuariosYRoles.repository.UsuarioRepository;
 
@@ -26,40 +26,68 @@ public class UsuarioService {
                 .orElseThrow(() -> new RuntimeException("Usuario con ID: " + idUsuario + " no encontrado."));
     }
 
+    // Mostrar a todos los profesores
+    public List<Usuario> listarProfesores() {
+        return usuarioRepository.findByTipoUsuario(TipoUsuario.PROFESOR);
+    }
+
+    // Obtener todos los administradores
+    public List<Usuario> listarAdministradores() {
+        return usuarioRepository.findByTipoUsuario(TipoUsuario.ADMINISTRADOR);
+    }
+
+    // Mostrar todos los estudiantes
+    public List<Usuario> listarEstudiantes() {
+        return usuarioRepository.findByTipoUsuario(TipoUsuario.ESTUDIANTE);
+    }
+
+    // Mostrar todos los usuarios activos
+    public List<Usuario> listarUsuariosActivos() {
+        return usuarioRepository.findByActivo(true);
+    }
+
+    // Mostrar todos los usuarios inactivos
+    public List<Usuario> listarUsuariosInactivos() {
+        return usuarioRepository.findByActivo(false);
+    }
+
     // Crear un nuevo usuario
-    public Usuario crearUsuario(UsuarioCreacionDTO usuarioDTO) {
-        Usuario usuario = new Usuario();
-        usuario.setTipoUsuario(usuarioDTO.getTipoUsuario());
-        usuario.setNombreUsuario(usuarioDTO.getNombreUsuario());
-        usuario.setApellidoPUsuario(usuarioDTO.getApellidoPUsuario());
-        usuario.setApellidoMUsuario(usuarioDTO.getApellidoMUsuario());
+    public Usuario crearUsuario(Usuario usuario) {
+        // Establecer valores por defecto
         usuario.setActivo(true);
         usuario.generarEmailInstitucional();
-        
+
         return usuarioRepository.save(usuario);
     }
 
     // Actualizar un usuario existente
-    public Usuario actualizarUsuario(int id, Usuario usuarioActualizado) {
-        Usuario usuarioExistente = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
+    public Usuario actualizarUsuario(int idUsuario, Usuario usuarioActualizado) {
+        Usuario usuarioExistente = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + idUsuario));
 
-        // Actualizar solo los campos permitidos
+        // Actualizar campos
+        usuarioExistente.setTipoUsuario(usuarioActualizado.getTipoUsuario());
         usuarioExistente.setNombreUsuario(usuarioActualizado.getNombreUsuario());
         usuarioExistente.setApellidoPUsuario(usuarioActualizado.getApellidoPUsuario());
         usuarioExistente.setApellidoMUsuario(usuarioActualizado.getApellidoMUsuario());
 
-        // Email actualizado 
+        // Regenerar email si cambió algún dato relevante
         usuarioExistente.generarEmailInstitucional();
 
         return usuarioRepository.save(usuarioExistente);
     }
 
+    public Usuario cambiarEstadoUsuario(int idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario con ID: " + idUsuario + " no encontrado."));
+
+        usuario.setActivo(!usuario.isActivo());
+        return usuarioRepository.save(usuario);
+    }
+
     // Eliminar Usuario
-    public void eliminarUsuario(int idUsuario)
-    {
-        if(!usuarioRepository.existsById(idUsuario))
-        {
+    public void eliminarUsuario(int idUsuario) {
+        if (!usuarioRepository.existsById(idUsuario)) {
             throw new RuntimeException("Usuario con ID" + idUsuario + " no encontrado");
         }
         usuarioRepository.deleteById(idUsuario);
