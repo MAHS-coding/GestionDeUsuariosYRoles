@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.Microservicio.GestionDeUsuariosYRoles.dto.UsuarioPublicDTO;
 import com.Microservicio.GestionDeUsuariosYRoles.model.Usuario;
 import com.Microservicio.GestionDeUsuariosYRoles.service.UsuarioService;
 
@@ -24,6 +25,22 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @GetMapping("/public/{idUsuario}")
+    public ResponseEntity<UsuarioPublicDTO> obtenerUsuarioPublico(@PathVariable int idUsuario) {
+        Usuario usuario = usuarioService.listarUsuariosPorId(idUsuario);
+
+        UsuarioPublicDTO dto = new UsuarioPublicDTO();
+        dto.setIdUsuario(usuario.getIdUsuario());
+        dto.setNombreUsuario(usuario.getNombreUsuario());
+        dto.setApellidoPUsuario(usuario.getApellidoPUsuario());
+        dto.setApellidoMUsuario(usuario.getApellidoMUsuario());
+        dto.setEmailInstitucional(usuario.getEmailInstitucional());
+        dto.setTipoUsuario(usuario.getTipoUsuario());
+        dto.setActivo(usuario.isActivo());
+
+        return ResponseEntity.ok(dto);
+    }
 
     @GetMapping
     private ResponseEntity<List<Usuario>> listarUsuarios() {
