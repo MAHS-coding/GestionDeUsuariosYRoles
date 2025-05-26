@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.Microservicio.GestionDeUsuariosYRoles.dto.UsuarioMicroserviceDTO;
 import com.Microservicio.GestionDeUsuariosYRoles.model.Usuario;
 import com.Microservicio.GestionDeUsuariosYRoles.service.UsuarioService;
 
@@ -25,20 +24,6 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
-
-    @GetMapping("/microservice-info/{idUsuario}")
-    public ResponseEntity<UsuarioMicroserviceDTO> obtenerUsuarioParaMicroservicios(@PathVariable int idUsuario) {
-        Usuario usuario = usuarioService.listarUsuariosPorId(idUsuario);
-
-        UsuarioMicroserviceDTO dto = new UsuarioMicroserviceDTO();
-        dto.setIdUsuario(usuario.getIdUsuario());
-        dto.setNombre(usuario.getNombreUsuario() + " " +
-                usuario.getApellidoPUsuario() + " " +
-                usuario.getApellidoMUsuario());
-        dto.setTipoUsuario(usuario.getTipoUsuario());
-
-        return ResponseEntity.ok(dto);
-    }
 
     @GetMapping
     private ResponseEntity<List<Usuario>> listarUsuarios() {
