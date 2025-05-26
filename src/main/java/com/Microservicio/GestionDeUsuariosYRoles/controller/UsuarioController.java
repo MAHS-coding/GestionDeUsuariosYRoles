@@ -26,7 +26,11 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @GetMapping
-    private ResponseEntity<List<Usuario>> listarUsuarios() {
+    public ResponseEntity<List<Usuario>> getUsuarios() {
+        List<Usuario> usuarios = usuarioService.listarUsuarios();
+        if (usuarios.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         return new ResponseEntity<>(usuarioService.listarUsuarios(), HttpStatus.OK);
     }
 
