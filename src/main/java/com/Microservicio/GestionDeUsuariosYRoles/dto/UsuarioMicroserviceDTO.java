@@ -4,12 +4,8 @@ import com.Microservicio.GestionDeUsuariosYRoles.model.TipoUsuario;
 import lombok.Data;
 
 @Data
-public class UsuarioPublicDTO {
+public class UsuarioMicroserviceDTO {
     private int idUsuario;
-    private String nombreUsuario;
-    private String apellidoPUsuario;
-    private String apellidoMUsuario;
-    private String emailInstitucional;
+    private String nombre;
     private TipoUsuario tipoUsuario;
-    private boolean activo;
 }
