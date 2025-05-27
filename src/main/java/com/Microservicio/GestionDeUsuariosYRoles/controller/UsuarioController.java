@@ -37,7 +37,10 @@ public class UsuarioController {
     @GetMapping("/{idUsuario}")
     public ResponseEntity<Usuario> obtenerUsuarioPorId(@PathVariable int idUsuario) {
         Usuario usuario = usuarioService.listarUsuariosPorId(idUsuario);
-        return new ResponseEntity<>(usuario, HttpStatus.OK);
+        if (usuario == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Devuelve 404
+        }
+        return new ResponseEntity<>(usuario, HttpStatus.OK); // Devuelve 200 si existe
     }
 
     @GetMapping("/profesores")

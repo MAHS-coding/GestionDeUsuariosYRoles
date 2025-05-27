@@ -27,8 +27,7 @@ public class UsuarioService {
 
     // Mostrar usuarios por id
     public Usuario listarUsuariosPorId(int idUsuario) {
-        return usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new RuntimeException("Usuario con ID: " + idUsuario + " no encontrado."));
+        return usuarioRepository.findById(idUsuario).orElse(null); // Retorna null si no existe
     }
 
     // Mostrar a todos los profesores
