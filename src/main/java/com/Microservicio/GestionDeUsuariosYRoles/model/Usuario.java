@@ -1,8 +1,15 @@
 package com.Microservicio.GestionDeUsuariosYRoles.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -16,6 +23,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@JsonInclude(Include.NON_NULL)
 @Entity
 @Table(name = "usuario")
 @Data
@@ -24,7 +32,7 @@ import lombok.NoArgsConstructor;
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idUsuario;
+    private int idUsuario;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -46,8 +54,7 @@ public class Usuario {
     @Column(nullable = false)
     private boolean activo = true;
 
-    public String getEstado()
-    {
+    public String getEstado() {
         return activo ? "ACTIVO" : "INACTIVO";
     }
 
@@ -55,7 +62,7 @@ public class Usuario {
     public void generarEmailInstitucional() {
         String nombreFormateado = this.nombreUsuario.toLowerCase().replace(" ", "");
         String apellidoFormateado = this.apellidoPUsuario.toLowerCase().replace(" ", "");
-        String dominio = switch(this.tipoUsuario) {
+        String dominio = switch (this.tipoUsuario) {
             case ADMINISTRADOR -> "@admin.duocuc.cl";
             case PROFESOR -> "@profesor.duocuc.cl";
             case ESTUDIANTE -> "@duocuc.cl";
@@ -66,4 +73,11 @@ public class Usuario {
     @ManyToOne
     @JoinColumn(name = "rol_id")
     private Rol rol;
+
+    @ElementCollection
+    @CollectionTable(name = "usuario_cursos_aceptados", // Nombre tabla intermedia
+            joinColumns = @JoinColumn(name = "usuario_id") // Llave foránea a usuario
+    )
+
+    private List<CursoAceptadoDTO> cursosAceptados = new ArrayList<>();
 }

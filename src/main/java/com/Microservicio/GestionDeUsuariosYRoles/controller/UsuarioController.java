@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.Microservicio.GestionDeUsuariosYRoles.model.CursoAceptadoDTO;
 import com.Microservicio.GestionDeUsuariosYRoles.model.Usuario;
+import com.Microservicio.GestionDeUsuariosYRoles.repository.UsuarioRepository;
 import com.Microservicio.GestionDeUsuariosYRoles.service.UsuarioService;
 
 @RestController
@@ -24,6 +27,9 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @GetMapping
     public ResponseEntity<List<Usuario>> getUsuarios() {
@@ -100,4 +106,24 @@ public class UsuarioController {
         usuarioService.eliminarUsuario(idUsuario);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @PutMapping("/{idUsuario}/vincular-curso")
+    public ResponseEntity<Void> vincularCurso(
+            @PathVariable int idUsuario,
+            @RequestBody Map<String, Object> requestBody) {
+
+        Long cursoId = Long.valueOf(requestBody.get("cursoId").toString());
+        String cursoNombre = requestBody.get("cursoNombre").toString();
+
+        usuarioService.vincularCurso(idUsuario, cursoId, cursoNombre);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/api/usuarios/{id}/cursos")
+    public List<CursoAceptadoDTO> obtenerCursosAceptados(@PathVariable int id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+        return usuario.getCursosAceptados();
+    }
+
 }
