@@ -114,9 +114,6 @@ public class UsuarioService {
 
     // Test para vincular con curso
     public void vincularCurso(int idUsuario, Long idCurso) {
-        Usuario usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
         // Usar el servicio para registrar el curso aceptado, que maneja la validación
         // de duplicados
         alumnoCursoAceptadoService.registrarAlumnoCurso(idUsuario, idCurso);

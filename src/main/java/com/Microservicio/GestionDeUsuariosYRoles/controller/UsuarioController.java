@@ -117,7 +117,6 @@ public class UsuarioController {
             @RequestBody Map<String, Object> requestBody) {
 
         Long cursoId = Long.valueOf(requestBody.get("cursoId").toString());
-        String cursoNombre = requestBody.get("cursoNombre").toString();
 
         usuarioService.vincularCurso(idUsuario, cursoId);
         return ResponseEntity.ok().build();
