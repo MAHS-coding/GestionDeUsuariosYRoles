@@ -3,11 +3,8 @@ package com.Microservicio.GestionDeUsuariosYRoles.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
 
-
-import com.Microservicio.GestionDeUsuariosYRoles.model.CursoAceptadoDTO;
 import com.Microservicio.GestionDeUsuariosYRoles.model.Rol;
 import com.Microservicio.GestionDeUsuariosYRoles.model.TipoUsuario;
 import com.Microservicio.GestionDeUsuariosYRoles.model.Usuario;
@@ -16,6 +13,10 @@ import com.Microservicio.GestionDeUsuariosYRoles.repository.UsuarioRepository;
 
 @Service
 public class UsuarioService {
+
+    @Autowired
+    private AlumnoCursoAceptadoService alumnoCursoAceptadoService;
+
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -112,18 +113,13 @@ public class UsuarioService {
     }
 
     // Test para vincular con curso
-public void vincularCurso(int idUsuario, Long cursoId, String cursoNombre) {
-    Usuario usuario = usuarioRepository.findById(idUsuario)
-            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    public void vincularCurso(int idUsuario, Long idCurso) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-    CursoAceptadoDTO nuevoCurso = new CursoAceptadoDTO(cursoId, cursoNombre);
-
-    // Evitar duplicados
-    if (!usuario.getCursosAceptados().contains(nuevoCurso)) {
-        usuario.getCursosAceptados().add(nuevoCurso);
-        usuarioRepository.save(usuario);
+        // Usar el servicio para registrar el curso aceptado, que maneja la validación
+        // de duplicados
+        alumnoCursoAceptadoService.registrarAlumnoCurso(idUsuario, idCurso);
     }
-}
-
 
 }

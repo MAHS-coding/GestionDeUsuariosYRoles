@@ -1,15 +1,10 @@
 package com.Microservicio.GestionDeUsuariosYRoles.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -47,7 +42,7 @@ public class Usuario {
     @Column(length = 150, nullable = false)
     private String apellidoMUsuario;
 
-    @Column(length = 150, nullable = false)
+    @Column(length = 150, nullable = false, unique = true)
     private String emailInstitucional;
 
     @JsonIgnore
@@ -73,11 +68,4 @@ public class Usuario {
     @ManyToOne
     @JoinColumn(name = "rol_id")
     private Rol rol;
-
-    @ElementCollection
-    @CollectionTable(name = "usuario_cursos_aceptados", // Nombre tabla intermedia
-            joinColumns = @JoinColumn(name = "usuario_id") // Llave foránea a usuario
-    )
-
-    private List<CursoAceptadoDTO> cursosAceptados = new ArrayList<>();
 }

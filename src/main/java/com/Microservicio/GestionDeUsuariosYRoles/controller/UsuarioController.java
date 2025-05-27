@@ -16,14 +16,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.Microservicio.GestionDeUsuariosYRoles.model.CursoAceptadoDTO;
+import com.Microservicio.GestionDeUsuariosYRoles.model.AlumnoCursoAceptado;
 import com.Microservicio.GestionDeUsuariosYRoles.model.Usuario;
 import com.Microservicio.GestionDeUsuariosYRoles.repository.UsuarioRepository;
+import com.Microservicio.GestionDeUsuariosYRoles.service.AlumnoCursoAceptadoService;
 import com.Microservicio.GestionDeUsuariosYRoles.service.UsuarioService;
 
 @RestController
 @RequestMapping("/api/usuarios")
 public class UsuarioController {
+
+    @Autowired
+    private AlumnoCursoAceptadoService alumnoCursoAceptadoService;
 
     @Autowired
     private UsuarioService usuarioService;
@@ -115,15 +119,18 @@ public class UsuarioController {
         Long cursoId = Long.valueOf(requestBody.get("cursoId").toString());
         String cursoNombre = requestBody.get("cursoNombre").toString();
 
-        usuarioService.vincularCurso(idUsuario, cursoId, cursoNombre);
+        usuarioService.vincularCurso(idUsuario, cursoId);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/api/usuarios/{id}/cursos")
-    public List<CursoAceptadoDTO> obtenerCursosAceptados(@PathVariable int id) {
-        Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
-        return usuario.getCursosAceptados();
-    }
+@GetMapping("{id}/cursos/aceptados")
+public List<AlumnoCursoAceptado> obtenerCursosAceptados(@PathVariable int idUsuario) {
+    // Podrías validar que el usuario exista, opcionalmente
+    usuarioRepository.findById(idUsuario)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+
+    // Obtener la lista de cursos aceptados para ese usuario
+    return alumnoCursoAceptadoService.obtenerCursosPorUsuario(idUsuario);
+}
 
 }
