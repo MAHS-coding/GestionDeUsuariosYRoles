@@ -17,7 +17,7 @@ public class UsuarioService {
     @Autowired
     private AlumnoCursoAceptadoService alumnoCursoAceptadoService;
 
-
+    
     @Autowired
     private UsuarioRepository usuarioRepository;
 
