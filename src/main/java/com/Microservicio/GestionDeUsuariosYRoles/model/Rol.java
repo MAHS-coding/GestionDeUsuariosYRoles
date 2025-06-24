@@ -3,7 +3,6 @@ package com.Microservicio.GestionDeUsuariosYRoles.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -43,7 +42,6 @@ public class Rol {
         return activo ? "ACTIVO" : "INACTIVO";
     }
 
-    @JsonIgnore
     public boolean isActivo() {
         return activo;
     }
